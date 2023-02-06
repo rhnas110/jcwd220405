@@ -14,7 +14,7 @@ export const AddressList = () => {
     try {
       const result = await (await Axios.get(`${baseApi}/address/${id}`)).data;
 
-      setAddress(result);
+      setAddress(result.result);
       // console.log(address);
     } catch (err) {
       console.log(err);

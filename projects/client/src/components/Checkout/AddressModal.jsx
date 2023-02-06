@@ -23,6 +23,7 @@ import { IoCheckmarkOutline } from "react-icons/io5";
 
 // address gw fix dulu ya mas, nb: AS
 // import { AddAddress } from "../Address/AddressSettings";
+import { AddAddress } from "../Address/AddAddress";
 
 const baseApi = process.env.REACT_APP_API_BASE_URL;
 
@@ -30,6 +31,7 @@ export const AddressModal = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
   const [address, setAddress] = useState([]);
+  const [name, setName] = useState([]);
   const [query, setQuery] = useState("");
   const [search, setSearch] = useState("");
   const { id } = useSelector((state) => state.userSlice.value);
@@ -43,7 +45,8 @@ export const AddressModal = () => {
           `${baseApi}/address/${id}?search_query=${query ? query : ""}`
         )
       ).data;
-      setAddress(result);
+      setAddress(result.result);
+      setName(result.name);
     } catch (err) {
       console.log(err);
     }
@@ -118,10 +121,16 @@ export const AddressModal = () => {
                   }}
                 />
               </InputGroup>
-              <Box mt={5}>
+              <Box mt={5} color={"white"}>
                 <Center>
                   {/* address gw fix dulu ya mas, nb: AS */}
-                  {/* <AddAddress /> */}
+                  <AddAddress
+                    address={address}
+                    baseApi={baseApi}
+                    id={id}
+                    search={search}
+                    name={name}
+                  />
                 </Center>
               </Box>
             </Box>

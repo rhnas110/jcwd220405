@@ -5,7 +5,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { FreeMode } from "swiper";
 import "swiper/css";
 import "swiper/css/free-mode";
-import { Box, Image, Skeleton, Stack, Text } from "@chakra-ui/react";
+import { Box, Center, Image, Skeleton, Stack, Text } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 
 const baseApi = process.env.REACT_APP_API_BASE_URL;
@@ -72,11 +72,12 @@ export const Categories = () => {
                     boxShadow={"0 0 4px 1px rgba(255,255,255,.59)"}
                     cursor={"pointer"}
                     _hover={{ color: "rgb(213, 75, 121)" }}
+                    position={"relative"}
                   >
                     <Box
-                      h="185px"
+                      // h="185px"
                       w="full"
-                      borderTopRadius="md"
+                      borderRadius="md"
                       overflow="hidden"
                     >
                       <Image
@@ -87,7 +88,7 @@ export const Categories = () => {
                         }`}
                         alt={item?.category}
                         width="full"
-                        height="full"
+                        height="222px"
                         bgGradient={
                           (index + 1) % 2 === 0
                             ? "linear(to-r, rgba(44, 22, 88, 0.69) 15%, #262A6E 100%)"
@@ -95,11 +96,18 @@ export const Categories = () => {
                         }
                       />
                     </Box>
-                    <Box px="4px" borderBottomRadius="md" textAlign={"center"}>
-                      <Box p={2} overflow={"hidden"}>
-                        <Text fontWeight={"semibold"}>{item?.category}</Text>
+                    <Center>
+                      <Box
+                        px="4px"
+                        position={"absolute"}
+                        textAlign={"center"}
+                        bottom={"0"}
+                      >
+                        <Box p={2} overflow={"hidden"}>
+                          <Text fontWeight={"semibold"}>{item?.category}</Text>
+                        </Box>
                       </Box>
-                    </Box>
+                    </Center>
                   </Box>
                 </SwiperSlide>
               );

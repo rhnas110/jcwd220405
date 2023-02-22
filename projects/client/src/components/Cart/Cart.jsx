@@ -24,6 +24,8 @@ export const Cart = ({ baseServer, baseApi }) => {
   const [quantity, setQuantity] = useState([]);
   const [selectedCart, setSelectedCart] = useState(0);
   const [totalPriceCart, setTotalPriceCart] = useState(0);
+  const [check, setCheck] = useState(false);
+  const [lazy, setLazy] = useState(false);
   const { id } = useSelector((state) => state.userSlice.value);
   const dispatch = useDispatch();
   const toast = useToast();
@@ -36,6 +38,7 @@ export const Cart = ({ baseServer, baseApi }) => {
       setQuantity(response.qty);
       setSelectedCart(response.selectedItem);
       setTotalPriceCart(response.totalPrice);
+      setCheck(response.isChecked);
     } catch (error) {}
   }, [baseApi, id, dispatch]);
 
@@ -64,13 +67,16 @@ export const Cart = ({ baseServer, baseApi }) => {
 
   const updateCart = async (item, action, qty) => {
     try {
+      setLazy(true);
       await axios.patch(`${baseApi}/cart/${id}`, {
         IdCart: item.id,
         action: action,
         qty: qty,
       });
+      setTimeout(() => setLazy(false), 1000);
       getCart();
     } catch (error) {
+      setTimeout(() => setLazy(false), 1000);
       return toast({
         title: `${error.response.data}`,
         status: "error",
@@ -90,6 +96,21 @@ export const Cart = ({ baseServer, baseApi }) => {
     } catch (error) {}
   };
 
+  const selectAllCart = async () => {
+    try {
+      await axios.post(`${baseApi}/cart/sa/${id}`, {
+        type: check ? "unchecked" : "checked",
+      });
+      setTimeout(() => getCart(), 1000);
+    } catch (error) {}
+  };
+  const deleteSelectedCart = async () => {
+    try {
+      await axios.delete(`${baseApi}/cart/ds/${id}`);
+      setTimeout(() => getCart(), 1000);
+    } catch (error) {}
+  };
+
   useEffect(() => {
     getCart();
   }, [getCart]);
@@ -102,7 +123,7 @@ export const Cart = ({ baseServer, baseApi }) => {
         flexDirection={{ base: "column", md: "row" }}
       >
         <Box width={{ base: "100%", md: "70%" }} p={2}>
-          <Box display={"flex"} flexDirection={"column"} gap={"4"}>
+          <Box display={"flex"} flexDirection={"column"} gap={"4"} mb={"4"}>
             <Heading>Cart</Heading>
           </Box>
           <CartCard
@@ -113,6 +134,11 @@ export const Cart = ({ baseServer, baseApi }) => {
             updateCart={updateCart}
             quantity={quantity}
             setQuantity={setQuantity}
+            selectAllCart={selectAllCart}
+            check={check}
+            lazy={lazy}
+            selectedCart={selectedCart}
+            deleteSelectedCart={deleteSelectedCart}
           />
           <Box>
             <Divider mt={"4"} borderTop={"4px"} borderBottom={"2px"} />

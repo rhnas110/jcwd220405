@@ -105,6 +105,58 @@ export const SectionAddCart = ({
     }
   };
 
+  const buyNow = async (product) => {
+    try {
+      if (!id) {
+        return toast({
+          title: `Register/Login First`,
+          status: "info",
+          position: "top",
+          isClosable: true,
+        });
+      }
+
+      if (!is_verified) {
+        toast({
+          title: `Verified your email`,
+          status: "info",
+          position: "top",
+          isClosable: true,
+        });
+        return setTimeout(navigate("/profile/settings"), 1500);
+      }
+
+      if (!totalStock) {
+        return toast({
+          title: `Out of Stock`,
+          status: "error",
+          position: "top",
+          isClosable: true,
+        });
+      }
+
+      await axios.post(`${baseApi}/cart/b/${id}`, {
+        quantity: quantity,
+        price: product.price,
+        IdProduct: product.id,
+        totalStock,
+      });
+
+      const cart = await (await axios.get(`${baseApi}/cart/${id}`)).data;
+      dispatch(cartUser(cart.result));
+
+      // navigate("/cart");
+      navigate("/cart/checkout");
+    } catch (error) {
+      return toast({
+        title: `${error.response.data}`,
+        status: "error",
+        position: "top",
+        isClosable: true,
+      });
+    }
+  };
+
   return (
     <>
       <Box
@@ -193,7 +245,8 @@ export const SectionAddCart = ({
               <ModalCloseButton />
               <ModalBody>
                 <Card
-                  direction={{ base: "column", sm: "row" }}
+                  display={"flex"}
+                  flexDirection={{ base: "column", md: "row" }}
                   overflow="hidden"
                   variant="outline"
                   mb={"8"}
@@ -223,7 +276,7 @@ export const SectionAddCart = ({
                         <Text>{product?.name}</Text>
                       </Box>
                     </Box>
-                    <Box maxW={"20%"}>
+                    <Box maxW={"20%"} display={"flex"}>
                       <Button
                         colorScheme="pink"
                         onClick={() => navigate("/cart")}
@@ -236,6 +289,22 @@ export const SectionAddCart = ({
               </ModalBody>
             </ModalContent>
           </Modal>
+        </Box>
+        <Box mt={"4"}>
+          <Button
+            w={"100%"}
+            colorScheme={"pink"}
+            variant={"outline"}
+            _hover={{
+              bgColor: "#B83280",
+              color: "white",
+              borderColor: "#B83280",
+            }}
+            disabled={totalStock ? false : true}
+            onClick={() => buyNow(product)}
+          >
+            Buy Now
+          </Button>
         </Box>
       </Box>
     </>

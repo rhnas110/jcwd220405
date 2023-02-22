@@ -8,6 +8,14 @@ import {
   Divider,
   Input,
   useMediaQuery,
+  useDisclosure,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  ModalFooter,
 } from "@chakra-ui/react";
 import { RiDeleteBinLine } from "react-icons/ri";
 
@@ -20,8 +28,14 @@ export const CartCard = ({
   deleteCart,
   updateCart,
   quantity,
+  selectAllCart,
+  check,
+  lazy,
+  selectedCart,
+  deleteSelectedCart,
 }) => {
   const [setSize] = useMediaQuery("(max-width: 369px)");
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const crossTitle = (str, num) => {
     if (str?.length > num) {
@@ -31,6 +45,54 @@ export const CartCard = ({
   };
   return (
     <>
+      <Box display={"flex"} justifyContent={"space-between"}>
+        <Box hidden={cart?.length ? false : true}>
+          <Checkbox
+            colorScheme={"pink"}
+            isChecked={check ? true : false}
+            onChange={() => selectAllCart()}
+          >
+            Select All
+          </Checkbox>
+        </Box>
+        <Box hidden={selectedCart ? false : true}>
+          <Text
+            color={"rgb(213, 75, 121)"}
+            onClick={() => onOpen()}
+            cursor={"pointer"}
+          >
+            Hapus
+          </Text>
+          <Modal isOpen={isOpen} onClose={onClose}>
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader m={"auto"}>Delete item?</ModalHeader>
+              <ModalCloseButton />
+              <ModalBody>
+                <Text textAlign={"center"}>
+                  The item you selected will be removed from the cart.
+                </Text>
+              </ModalBody>
+              <ModalFooter>
+                <Box>
+                  <Button onClick={onClose} mr={"4"}>
+                    Cancel
+                  </Button>
+                  <Button
+                    colorScheme={"pink"}
+                    onClick={() => {
+                      deleteSelectedCart();
+                      setTimeout(() => onClose(), 1000);
+                    }}
+                  >
+                    Delete
+                  </Button>
+                </Box>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
+        </Box>
+      </Box>
       {cart?.map((item, index) => {
         return (
           <Box key={index}>
@@ -39,7 +101,7 @@ export const CartCard = ({
               <Box>
                 <Checkbox
                   colorScheme={"pink"}
-                  defaultChecked={item?.status ? true : false}
+                  isChecked={item?.status ? true : false}
                   onChange={() => selectCart(item)}
                 ></Checkbox>
               </Box>
@@ -107,7 +169,7 @@ export const CartCard = ({
                     onClick={() => {
                       updateCart(item, "-");
                     }}
-                    disabled={quantity[index] <= 1 ? true : false}
+                    disabled={quantity[index] <= 1 || lazy ? true : false}
                   >
                     -
                   </Button>
@@ -149,7 +211,9 @@ export const CartCard = ({
                       updateCart(item, "+");
                     }}
                     disabled={
-                      quantity[index] >= +item?.total_stocks ? true : false
+                      quantity[index] >= +item?.total_stocks || lazy
+                        ? true
+                        : false
                     }
                   >
                     +

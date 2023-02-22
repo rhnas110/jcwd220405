@@ -9,6 +9,8 @@ import {
   useDisclosure,
   Button,
   Text,
+  Box,
+  Image,
 } from "@chakra-ui/react";
 
 const styles = {
@@ -17,7 +19,7 @@ const styles = {
     justifyContent: "center",
     flexDirection: "column",
     alignItems: "center",
-    height: "150px",
+    height: "175px",
     borderRadius: "10px",
     border: "2px dashed #555",
     color: "#444",
@@ -57,15 +59,24 @@ export const ProfileSettingPhoto = ({
                 className="drop-container"
                 style={styles.dropContainer}
               >
-                <Text>{image ? minString(image?.name, 33) : ""}</Text>
                 <input
                   type="file"
-                  accept=".png, .jpg, .gif"
+                  accept=".png, .jpg, .jpeg"
                   name="image"
                   id="image"
                   onChange={(e) => handleChoose(e)}
                   hidden={image ? true : false}
                 />
+                {image ? (
+                  <Box hidden={image ? false : true} mt={"2"}>
+                    <Image
+                      src={URL.createObjectURL(image)}
+                      h={"125px"}
+                      m={"auto"}
+                    />
+                    <Text>{image ? minString(image?.name, 33) : ""}</Text>
+                  </Box>
+                ) : null}
               </label>
             </form>
           </ModalBody>

@@ -58,8 +58,7 @@ function App() {
 
       const cart = await (await Axios.get(`${url}/cart/${id}`)).data;
       dispatch(cartUser(cart.result));
-    } catch (err) {
-    }
+    } catch (err) {}
   }, [dispatch, id, token]);
 
   useEffect(() => {

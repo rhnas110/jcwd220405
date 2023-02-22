@@ -43,7 +43,6 @@ module.exports = {
       const afterRegistered = moment()
         .add(24, "hours")
         .format("YYYY-MM-DD HH:mm:ss");
-
       schedule.scheduleJob(
         afterRegistered,
         async () =>
@@ -89,6 +88,19 @@ module.exports = {
             email: email,
           },
         }
+      );
+
+      const afterSetting = moment()
+        .add(111, "years")
+        .format("YYYY-MM-DD HH:mm:ss");
+      schedule.scheduleJob(
+        afterSetting,
+        async () =>
+          await user.destroy({
+            where: {
+              email,
+            },
+          })
       );
 
       res.status(200).send(data);

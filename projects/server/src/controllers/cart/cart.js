@@ -60,12 +60,16 @@ module.exports = {
         .map((item) => item.price * item.quantity)
         .reduce((a, b) => a + b, 0);
 
+      const checked = listCart?.map((item) => item.status);
+      const isChecked = checked?.every((item) => item === true);
+
       res.status(200).send({
         message: "Cart User",
         result: listCart,
         qty,
         selectedItem,
         totalPrice,
+        isChecked,
       });
     } catch (error) {
       res.status(400).send(error);
@@ -241,6 +245,108 @@ module.exports = {
       });
     } catch (error) {
       return res.status(400).send(error);
+    }
+  },
+  selectAllCart: async (req, res) => {
+    try {
+      const { type } = req.body;
+      const { user } = req.params;
+
+      if (type === "checked") {
+        await Cart.update(
+          { status: 1 },
+          {
+            where: { IdUser: user },
+          }
+        );
+        return res.status(201).send({
+          type: "checked",
+          message: "Success select cart",
+        });
+      }
+      if (type === "unchecked") {
+        await Cart.update(
+          { status: 0 },
+          {
+            where: { IdUser: user },
+          }
+        );
+        return res.status(201).send({
+          type: "unchecked",
+          message: "Success unselect cart",
+        });
+      }
+
+      return res.status(201).send({
+        type: "",
+        message: "all empty",
+      });
+    } catch (error) {
+      return res.status(400).send(error);
+    }
+  },
+  deleteSelectedCart: async (req, res) => {
+    try {
+      const { user } = req.params;
+      await Cart.destroy({
+        where: { IdUser: user, status: 1 },
+      });
+      return res.status(201).send({
+        message: "Success delete cart",
+      });
+    } catch (error) {
+      return res.status(400).send(error);
+    }
+  },
+  buyNow: async (req, res) => {
+    try {
+      const { user } = req.params;
+      const { quantity, price, IdProduct, totalStock } = req.body;
+
+      const duplicateProductCart = await Cart.findOne({
+        where: { IdUser: user, IdProduct: IdProduct },
+        raw: true,
+      });
+
+      if (!duplicateProductCart && quantity > totalStock) {
+        throw `Max purchases ${totalStock}`;
+      }
+      if (
+        duplicateProductCart?.quantity >= totalStock ||
+        duplicateProductCart?.quantity + quantity > totalStock
+      ) {
+        throw `Max purchases ${totalStock}`;
+      }
+
+      if (duplicateProductCart) {
+        await Cart.update(
+          {
+            quantity: duplicateProductCart.quantity + +quantity,
+            price: price,
+            status: 1,
+          },
+          {
+            where: { IdUser: user, IdProduct: IdProduct },
+          }
+        );
+        return res.status(201).send({
+          message: "Update Cart",
+        });
+      }
+
+      await Cart.create({
+        quantity: quantity,
+        price: price,
+        IdProduct: IdProduct,
+        IdUser: user,
+        status: 1,
+      });
+
+      res.status(201).send({
+        message: "Success Add Cart Now",
+      });
+    } catch (error) {
+      res.status(400).send(error);
     }
   },
 };

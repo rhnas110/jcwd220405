@@ -35,7 +35,7 @@ const baseApi = process.env.REACT_APP_API_BASE_URL;
 //page
 export const Shipment = () => {
   const navigate = useNavigate();
-  const { id } = useSelector((state) => state.userSlice.value);
+  const { id, is_verified } = useSelector((state) => state.userSlice.value);
   const { onOpen, onClose, isOpen } = useDisclosure();
   const [detail, setDetail] = useState([]); //result cart
   const [service, setService] = useState([]); //rajaongkir
@@ -145,6 +145,20 @@ export const Shipment = () => {
     getCost();
   }, [getCost, createOrder]);
 
+  function ChecKVerify() {
+    if (is_verified) {
+      onOpen();
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Your Account is not verified",
+        customClass: {
+          container: "my-swal",
+        },
+      });
+    }
+  }
+
   return (
     <Box>
       <>
@@ -253,7 +267,7 @@ export const Shipment = () => {
                 mb={5}
                 borderColor="gray"
                 fontWeight={600}
-                onClick={onOpen}
+                onClick={ChecKVerify}
               >
                 Pembayaran
               </Button>

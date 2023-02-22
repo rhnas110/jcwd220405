@@ -12,8 +12,10 @@ import {
 
 // react icon
 import { CgChevronRight } from "react-icons/cg";
+import { useLocation } from "react-router-dom";
 
 export const BreadCrumbsComp = () => {
+  const location = useLocation();
   const url = new URL(window.location.href).pathname;
   const arr = url.split("/");
   let homeURL = "";
@@ -33,6 +35,9 @@ export const BreadCrumbsComp = () => {
         </BreadcrumbItem>
         {arr.length > 1
           ? arr.map((path, index) => {
+              if (location.pathname.includes("/product")) {
+                return 0;
+              }
               return (
                 <BreadcrumbItem key={index}>
                   <BreadcrumbLink href={`/${path}`} color={"white"}>

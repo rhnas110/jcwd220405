@@ -32,7 +32,7 @@ export const HomePage = () => {
         />
       </Center>
       <Box mb={"8"} color={"white"}>
-        <Box maxW={"85%"} m={"auto"}>
+        <Box maxW={"90%"} m={"auto"}>
           <Divider border={"2px"} mb={"2"} />
           <Heading mb={"2"} size={"lg"} color={"#D0BDAC"} fontWeight={"bold"}>
             M' Categories
@@ -41,12 +41,12 @@ export const HomePage = () => {
         <Box display={"flex"} justifyContent={"center"} mb={"6"}>
           {<Categories />}
         </Box>
-        <Box maxW={"85%"} m={"auto"}>
+        {/* <Box maxW={"85%"} m={"auto"}>
           <Divider border={"2px"} />
-        </Box>
+        </Box> */}
       </Box>
       <Box mb={"8"} color={"white"}>
-        <Box maxW={"85%"} m={"auto"}>
+        <Box maxW={"90%"} m={"auto"}>
           <Divider border={"2px"} mb={"2"} />
           <Heading mb={"2"} size={"lg"} color={"#D0BDAC"} fontWeight={"bold"}>
             Mokomdo Choice's
@@ -55,9 +55,9 @@ export const HomePage = () => {
         <Box display={"flex"} justifyContent={"center"} mb={"6"}>
           <HomeProduct />
         </Box>
-        <Box maxW={"85%"} m={"auto"}>
+        {/* <Box maxW={"85%"} m={"auto"}>
           <Divider border={"2px"} />
-        </Box>
+        </Box> */}
       </Box>
     </Box>
   );

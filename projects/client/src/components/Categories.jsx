@@ -31,7 +31,7 @@ export const Categories = () => {
   return (
     <Box maxW={"full"}>
       {category?.length ? (
-        <Box maxW={"85%"} m={"auto"}>
+        <Box maxW={"90%"} m={"auto"}>
           <Swiper
             freeMode={true}
             grabCursor={true}
@@ -42,21 +42,21 @@ export const Categories = () => {
                 slidesPerView: 1,
                 spaceBetween: 5,
               },
-              505: {
+              640: {
                 slidesPerView: 2,
                 spaceBetween: 10,
               },
-              808: {
+              768: {
                 slidesPerView: 3,
                 spaceBetween: 15,
               },
-              1111: {
+              1024: {
                 slidesPerView: 4,
-                spaceBetween: 15,
+                spaceBetween: 20,
               },
               1280: {
                 slidesPerView: 5,
-                spaceBetween: 10,
+                spaceBetween: 30,
               },
             }}
           >

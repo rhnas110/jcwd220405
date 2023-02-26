@@ -61,7 +61,7 @@ export const CartCard = ({
             onClick={() => onOpen()}
             cursor={"pointer"}
           >
-            Hapus
+            Delete
           </Text>
           <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />

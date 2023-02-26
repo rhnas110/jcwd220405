@@ -11,6 +11,7 @@ import {
   useDisclosure,
   useToast,
   Text,
+  Image,
 } from "@chakra-ui/react";
 import Swal from "sweetalert2";
 
@@ -28,7 +29,7 @@ export const PaymentProof = ({ id, setDir, minString }) => {
       justifyContent: "center",
       flexDirection: "column",
       alignItems: "center",
-      height: "150px",
+      height: "175px",
       borderRadius: "10px",
       border: "2px dashed #555",
       color: "#444",
@@ -107,7 +108,6 @@ export const PaymentProof = ({ id, setDir, minString }) => {
                 className="drop-container"
                 style={styles.dropContainer}
               >
-                <Text>{image ? minString(image?.name, 33) : ""}</Text>
                 <input
                   type="file"
                   accept=".png, .jpg, .gif"
@@ -116,6 +116,16 @@ export const PaymentProof = ({ id, setDir, minString }) => {
                   onChange={(e) => handleChoose(e)}
                   hidden={image ? true : false}
                 />
+                {image ? (
+                  <Box hidden={image ? false : true} mt={"2"}>
+                    <Image
+                      src={URL.createObjectURL(image)}
+                      h={"125px"}
+                      m={"auto"}
+                    />
+                    <Text>{image ? minString(image?.name, 33) : ""}</Text>
+                  </Box>
+                ) : null}
               </label>
             </form>
           </ModalBody>
